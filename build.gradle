@@ -23,6 +23,16 @@ repositories {
     mavenCentral()
 }
 
+task loadDep(type:Exec) {
+    workingDir './frontend/'
+    commandLine 'npm', 'install'
+    standardOutput = new ByteArrayOutputStream()
+
+    ext.output = {
+        return standardOutput.toString()
+    }
+}
+
 task buildFrontend(type:Exec) {
     workingDir './frontend/'
     commandLine 'npm', 'run', 'build', '-prod'
@@ -34,6 +44,7 @@ task buildFrontend(type:Exec) {
     }
 }
 
+buildFrontend.dependsOn loadDep
 processResources.dependsOn buildFrontend
 
 dependencies {
